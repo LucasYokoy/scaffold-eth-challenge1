@@ -5,6 +5,8 @@ import "./ExampleExternalContract.sol"; //https://github.com/OpenZeppelin/openze
 
 contract Staker {
 
+  // Edition for checkpoint 0
+
   ExampleExternalContract public exampleExternalContract;
 
   constructor(address exampleExternalContractAddress) public {

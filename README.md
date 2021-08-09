@@ -20,6 +20,7 @@ cd challenge-1-decentralized-staking
 git checkout challenge-1-decentralized-staking
 yarn install
 ```
+DONE!!!
 
 🔏 Edit your smart contract `Staker.sol` in `packages/hardhat/contracts`
 
