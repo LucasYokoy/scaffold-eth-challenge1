@@ -38,6 +38,7 @@ You'll have three terminals up for:
 
 > 👩‍💻 Rerun `yarn deploy` whenever you want to deploy new contracts to the frontend.
 
+DONE!!!
 ---
 
 ### Checkpoint 2: 🥩 Staking 💵

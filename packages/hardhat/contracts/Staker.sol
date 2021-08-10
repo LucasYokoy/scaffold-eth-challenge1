@@ -4,8 +4,11 @@ import "hardhat/console.sol";
 import "./ExampleExternalContract.sol"; //https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol
 
 contract Staker {
-
+  
   // Edition for checkpoint 0
+
+  mapping ( address => uint256 ) public balances;
+  uint256 public constant treshold = 1 ether;
 
   ExampleExternalContract public exampleExternalContract;
 
@@ -15,7 +18,11 @@ contract Staker {
 
   // Collect funds in a payable `stake()` function and track individual `balances` with a mapping:
   //  ( make sure to add a `Stake(address,uint256)` event and emit it for the frontend <List/> display )
+  event Stake(address, uint256);
 
+  function stake() payable{
+    //
+  }
 
   // After some `deadline` allow anyone to call an `execute()` function
   //  It should either call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
