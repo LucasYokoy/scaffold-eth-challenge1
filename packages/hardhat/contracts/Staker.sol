@@ -21,9 +21,13 @@ contract Staker {
     deadline = block.timestamp + 30 seconds;
   }
 
-  // Modifier that makes sure the function is only executed after the deadline has passed
-  modifier afterDeadline{
-    require(block.timestamp >= deadline, "Can't do that before the deadline");
+  // Modifier that makes sure the function is only executed before or after the deadline
+  modifier afterDeadline(bool isAfter){
+    if(isAfter){
+      require(block.timestamp >= deadline, "Can't do that before the deadline");
+    } else{
+      require(block.timestamp < deadline, "Can't do that after deadline.");
+    }
     _;
   }
 
@@ -37,9 +41,8 @@ contract Staker {
   //  ( make sure to add a `Stake(address,uint256)` event and emit it for the frontend <List/> display )
   event Stake(address, uint256);
 
-  function stake() external payable{
-    // check if the deadline hasn't passed
-    require(block.timestamp < deadline, "Can't stake after deadline.");
+  function stake() external payable afterDeadline(false){
+    // check if the deadline hasn't passed (modifier)
     // Update balance
     balances[msg.sender] = msg.value;
 
@@ -49,7 +52,7 @@ contract Staker {
 
   // After some `deadline` allow anyone to call an `execute()` function
   //  It should either call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
-  function execute() external afterDeadline notCompleted payable{
+  function execute() external afterDeadline(true) notCompleted payable{
     // make sure the deadline has passed (modifier)
     // make sure the threshold was reached
     require(address(this).balance >= threshold, "Failed to reach the threshold");
@@ -61,7 +64,7 @@ contract Staker {
 
 
   // if the `threshold` was not met, allow everyone to call a `withdraw()` function
-  function withdraw(address payable user) external afterDeadline notCompleted payable{
+  function withdraw(address payable user) external afterDeadline(true) notCompleted payable{
     // make sure the deadline has passed (modifier)
     // make sure the threshold wasn't reached
     require(address(this).balance < threshold, "Can't withdraw if the threshold was reached");
