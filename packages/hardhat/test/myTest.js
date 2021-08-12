@@ -6,21 +6,24 @@ use(solidity);
 
 describe("My Dapp", function () {
   let myContract;
+  let extContract;
 
   describe("YourContract", function () {
     it("Should deploy YourContract", async function () {
-      const YourContract = await ethers.getContractFactory("YourContract");
+      const stakerContract = await ethers.getContractFactory("Staker");
+      const externalContract = await ethers.getContractFactory("ExampleExternalContract");
 
-      myContract = await YourContract.deploy();
+      extContract = await externalContract.deploy();
+      myContract = await stakerContract.deploy(extContract.address);
+      [owner, addr1, addr2, _] = await ethers.getSigners();
+
+      // If the contracts were properly deployed, the external contract should be accessible and completed should be false
+      let isCompleted = await extContract.completed();
+      expect(!isCompleted).to.be.true;
     });
 
-    describe("setPurpose()", function () {
-      it("Should be able to set a new purpose", async function () {
-        const newPurpose = "Test Purpose";
-
-        await myContract.setPurpose(newPurpose);
-        expect(await myContract.purpose()).to.equal(newPurpose);
-      });
+    it("Should accept stakes", async function(){
+      
     });
   });
 });
