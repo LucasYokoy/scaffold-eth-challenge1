@@ -31,6 +31,16 @@ contract Staker {
     _;
   }
 
+  // Modifier that makes sure the function is only executed if the threshold was reached, or not
+  modifier thresholdReached(bool mustBeReached){
+    if(mustBeReached){
+      require(address(this).balance >= threshold, "Failed to reach the threshold");
+    } else{
+      require(address(this).balance < threshold, "Can't do that if the threshold was reached");
+    }
+    _;
+  }
+
   // Modifier that makes sure the external contract hasn't been completed yet. Used to protect execute and witdraw functions
   modifier notCompleted{
     require(!exampleExternalContract.completed());
@@ -41,6 +51,7 @@ contract Staker {
   //  ( make sure to add a `Stake(address,uint256)` event and emit it for the frontend <List/> display )
   event Stake(address, uint256);
 
+
   function stake() external payable afterDeadline(false){
     // check if the deadline hasn't passed (modifier)
     // Update balance
@@ -50,26 +61,38 @@ contract Staker {
     emit Stake(msg.sender, msg.value);
   }
 
+
   // After some `deadline` allow anyone to call an `execute()` function
   //  It should either call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
-  function execute() external afterDeadline(true) notCompleted payable{
+  function execute()
+    external
+    afterDeadline(true)
+    thresholdReached(true)
+    notCompleted
+    payable{
     // make sure the deadline has passed (modifier)
-    // make sure the threshold was reached
-    require(address(this).balance >= threshold, "Failed to reach the threshold");
+    // make sure the threshold was reached (modifier)
     // Call the complete() function from the external contract
     // Transfer funds to external contract
     exampleExternalContract.complete{value: address(this).balance}();
-    // exampleExternalContractAddress.transfer(address(this).balance);
+
   }
 
 
   // if the `threshold` was not met, allow everyone to call a `withdraw()` function
-  function withdraw(address payable user) external afterDeadline(true) notCompleted payable{
+  function withdraw(address payable user)
+    external
+    afterDeadline(true)
+    thresholdReached(false)
+    notCompleted
+    payable{
     // make sure the deadline has passed (modifier)
-    // make sure the threshold wasn't reached
-    require(address(this).balance < threshold, "Can't withdraw if the threshold was reached");
+    // make sure the threshold wasn't reached (modifier)
+    // set user's balance to 0 to avoid re-entry attacks
+    uint256 formerBalance = balances[user];
+    balances[user] = 0;
     // transfer the sender's balance back to the sender
-    user.transfer(balances[user]);
+    user.transfer(formerBalance);
   }
 
 

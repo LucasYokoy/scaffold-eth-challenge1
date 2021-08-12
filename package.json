@@ -55,5 +55,8 @@
       "**/@graphprotocol/graph-ts",
       "**/@graphprotocol/graph-ts/**"
     ]
+  },
+  "dependencies": {
+    "solc": "^0.7.3"
   }
 }
