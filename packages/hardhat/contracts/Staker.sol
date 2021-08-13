@@ -55,7 +55,7 @@ contract Staker {
   function stake() external payable afterDeadline(false){
     // check if the deadline hasn't passed (modifier)
     // Update balance
-    balances[msg.sender] = msg.value;
+    balances[msg.sender] += msg.value;
 
     // Emit Stake event
     emit Stake(msg.sender, msg.value);
@@ -63,7 +63,7 @@ contract Staker {
 
 
   // After some `deadline` allow anyone to call an `execute()` function
-  //  It should either call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
+  // It should either call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
   function execute()
     external
     afterDeadline(true)
