@@ -125,7 +125,7 @@ function App(props) {
   //📟 Listen for broadcast events
   const stakeEvents = useEventListener(readContracts, "Staker", "Stake", localProvider, 1);
   console.log("📟 stake events:",stakeEvents)
-
+  
   // keep track of a variable from the contract in the local React state:
   const timeLeft = useContractReader(readContracts,"Staker", "timeLeft")
   console.log("⏳ timeLeft:",timeLeft)

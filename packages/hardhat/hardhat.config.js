@@ -32,8 +32,8 @@ function mnemonic() {
 }
 
 module.exports = {
-  defaultNetwork,
-
+  defaultNetwork: "ropsten",
+  
   // don't forget to set your provider like:
   // REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
   // (then your frontend will talk to your contracts on the live network!)
@@ -66,7 +66,7 @@ module.exports = {
       },
     },
     ropsten: {
-      url: "https://ropsten.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", //<---- YOUR INFURA ID! (or it won't work)
+      url: "https://ropsten.infura.io/v3/2038a3ef545847109e9153ca8348c3a5", //<---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: mnemonic(),
       },

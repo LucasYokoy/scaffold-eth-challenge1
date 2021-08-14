@@ -13,22 +13,19 @@ describe("My Dapp", function () {
   let extContract;
   
   beforeEach(async function(){
-    const stakerContract = await ethers.getContractFactory("Staker");
     const externalContract = await ethers.getContractFactory("ExampleExternalContract");
-  
+    const stakerContract = await ethers.getContractFactory("Staker");
+    
     extContract = await externalContract.deploy();
     myContract = await stakerContract.deploy(extContract.address);
     [owner, addr1, addr2, _] = await ethers.getSigners();
   
-    await addr1.transfer(myContract.address, 0.5)
-    addr1Balance = await myContract.balances[addr1];
-    console.log(addr1Balance);
-  
-    // addr1Balance = await ethers.balanceOf(addr1);
-    // console.log(addr1Balance);
+    // if the contract was properly deployed, the external contract should be recorded in the stakerContract;
+    externalAddress = await myContract.exampleExternalContractAddress;
+    expect(externalAddress).to.equal(extContract.address);
   });
 
-  function deployAndStake(stakeAmount){
+  async function deployAndStake(stakeAmount){
     // send eth from addr1
     // send eth from addr2
     // their respective balances should be updated
@@ -46,6 +43,7 @@ describe("My Dapp", function () {
 
     it("Should accept stakes until threshold is reached", async function(){
       // Use the deployAndStake function with 0.5 eth as argument
+      await deployAndStake(0.5);
     });
 
     it("Treshold reached: before deadline", async function(){
@@ -66,6 +64,7 @@ describe("My Dapp", function () {
   describe("Threshold has NOT been reached", async function() {
     it("Redeploy contract, and take stakes without reaching the threshold", async function(){
       // Use the deployAndStake function with 0.25 eth as argument
+      await deployAndStake(0.25);
     });
 
     it("Treshold not reached: before deadline", async function(){
