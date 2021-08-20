@@ -97,8 +97,8 @@ contract Staker {
 
 
   // Add a `timeLeft()` view function that returns the time left before the deadline for the frontend
-  function timeLeft() public view returns(uint256){
-    uint256 time = deadline - block.timestamp;
+  function timeLeft() public view returns(int256){
+    int256 time = int256(deadline - block.timestamp);
     if(time >= 0){
       return time;
     } else{
